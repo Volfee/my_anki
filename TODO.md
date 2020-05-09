@@ -1,0 +1,2 @@
+TODO:
+* Create Flashcard class.
