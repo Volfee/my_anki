@@ -7,8 +7,12 @@ class UserInterface:
 
 	def create_new_card(self, front, back):
 		flashcard = Flashcard(front, back)
-		flashcard.save()
+		
 		self.current_deck['flashcard.id'] = flashcard
+
+		sm = StorageManager() 
+		sm.save_card(flashcard)
+
 		print("New {0} created.".format(flashcard))
 
 	def load_all_cards(self):
@@ -16,14 +20,7 @@ class UserInterface:
 		cards = list(sm.load_all_cards())
 		self.current_deck = {card.id:card for card in cards}
 
-
 ui = UserInterface()
-ui.create_new_card('auto', 'car')
-ui.create_new_card('klawiatura', 'keyboard')
-ui.create_new_card('lampka', 'light')
-
-
-# ui.load_all_cards()
-# for card in ui.current_deck.values():
-#  	print(card)
-
+ui.create_new_card('samochod', 'car')
+ui.create_new_card('samolot', 'plane')
+ui.create_new_card('komin', 'chimney')
