@@ -3,24 +3,21 @@ from storage_manager import StorageManager
 
 class UserInterface:
 
-	current_deck = {}
-
 	def create_new_card(self, front, back):
 		flashcard = Flashcard(front, back)
-		
-		self.current_deck['flashcard.id'] = flashcard
-
 		sm = StorageManager() 
 		sm.save_card(flashcard)
-
 		print("New {0} created.".format(flashcard))
 
 	def load_all_cards(self):
 		sm = StorageManager()
-		cards = list(sm.load_all_cards())
-		self.current_deck = {card.id:card for card in cards}
+		cards = sm.load_all_cards()
+
+		return cards
+
+	def remove_card(self, flashcard):
+		sm = StorageManager()
+		cards = sm.remove_card(flashcard)
+
 
 ui = UserInterface()
-ui.create_new_card('samochod', 'car')
-ui.create_new_card('samolot', 'plane')
-ui.create_new_card('komin', 'chimney')

@@ -1,5 +1,6 @@
 import sqlite3
 import os
+from flashcards import Flashcard
 
 class StorageManager:
 	"""Handles saving and loading flashcards from drive."""
@@ -34,14 +35,24 @@ class StorageManager:
 		conn.commit()
 		conn.close()
 
-	def get_last_id(self):
-		pass
-
 	def load_all_cards(self):
-		pass
+		conn = sqlite3.connect(self.db_location)
+		cursor = conn.execute("""
+			SELECT front, back, deck FROM flashcards
+			""")
+		for card in cursor:
+			front, back, deck = card
+			yield Flashcard(front, back, deck)
+		conn.close()		
 
 	def clear_storage(self):
 		pass
 
-	def remove_card(self):
-		pass
+	def remove_card(self, flashcard):
+		conn = sqlite3.connect(self.db_location)
+		cursor = conn.execute("""
+			DELETE FROM flashcards
+			WHERE front = (?)
+			""", (flashcard.front,))
+		conn.commit()
+		conn.close()
