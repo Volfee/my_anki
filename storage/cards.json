@@ -1,0 +1,13 @@
+{
+  "id": 1,
+  "front": "auto",
+  "back": "car"
+}{
+  "id": 2,
+  "front": "klawiatura",
+  "back": "keyboard"
+}{
+  "id": 3,
+  "front": "lampka",
+  "back": "light"
+}

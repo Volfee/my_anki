@@ -12,6 +12,9 @@ class Flashcard:
 		self.front = front
 		self.back = back
 
+	def __repr__(self):
+		return f"Flashcard('{self.front}', '{self.back}')"
+
 	def _create_id(self):
 		if not Flashcard.last_id:
 			Flashcard.last_id = self.sm.get_last_id()

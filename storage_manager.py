@@ -11,13 +11,20 @@ class StorageManager:
 
 	def save_card(self, flashcard):
 		with open(self.storage, 'a') as file:
-			json.dump(flashcard.to_dict(), file)
+			json.dump(flashcard.to_dict(), file, indent=2)
 		self.store_last_id(flashcard.id)
 
-	def load_all_cards(n=0):
+	def load_all_cards(self):
+		#try:
 		with open(self.storage) as cards_file:
 			cards = json.load(cards_file)
-		return cards
+		for card in cards:
+			yield Flashcard(card['front'], card['back'])
+
+		#except json.decoder.JSONDecodeError as err:
+		#	print("No cards in database yet. Nothing loaded.")
+		#	return {}
+
 
 	def get_last_id(self):
 		try:
