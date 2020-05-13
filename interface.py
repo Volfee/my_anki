@@ -11,9 +11,8 @@ class UserInterface:
 		if not due:
 			due = self.current_time
 		flashcard = Flashcard(front, back, review_due=due)
-		sm = StorageManager() 
-		sm.save_card(flashcard)
-		print("New {0} created.".format(flashcard))
+		flashcard.save_to_db()
+		print(f"New {flashcard} created.")
 
 	def load_all_cards(self):
 		cards = self.sm.load_all_cards()
@@ -41,16 +40,14 @@ class UserInterface:
 			if is_correct == 'y':
 				review.correct_answer()
 			else:
-				review.correct_answer()
-
-
+				review.wrong_answer()
 
 ui = UserInterface()
-#ui.show_all_cards()
+ui.show_all_cards()
 
 
 # Create some flashcards.
-# ui.create_new_card('plane', 'samolot')
+# ui.create_new_card('toy', 'zabawka')
 # ui.create_new_card('car', 'samochod')
 # ui.create_new_card('picture', 'obraz')
 # ui.create_new_card('cup', 'kubek')
@@ -61,7 +58,7 @@ ui = UserInterface()
 review = ui.create_review()
 ui.start_review(review)
 
-
+ui.show_all_cards()
 
 # Start reviewing
 
