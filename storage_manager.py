@@ -27,17 +27,6 @@ class StorageManager:
 	def db_exists(self):
 		return os.path.isfile(self.db_location)
 
-	def save_card(self, flashcard):
-		conn = sqlite3.connect(self.db_location)
-		conn.execute("""
-			INSERT INTO flashcards
-			VALUES (?,?,?,?)
-			""", 
-			(flashcard.front, flashcard.back, flashcard.deck, flashcard.review_due)
-		)
-		conn.commit()
-		conn.close()
-
 	def load_all_cards(self):
 		conn = sqlite3.connect(self.db_location)
 		cursor = conn.execute("""

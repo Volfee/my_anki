@@ -15,7 +15,7 @@ class Review:
 
 	def correct_answer(self):
 		new_due_date = (self.current_card.review_due + 1) * 2
-		self.current_card.update_due_date(new_due_date)
+		self.current_card.review_due = new_due_date
 		print(f'Card due changed to {new_due_date}')
 		self.current_card = None
 
