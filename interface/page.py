@@ -31,10 +31,12 @@ class Page(tk.Frame):
 		return header
 
 	def left_header_icon(self, master):
-		photo = ImageTk.PhotoImage(Image.open('icons/flashcards.png'))
-		left_header_icon = tk.Label(master, image=photo)
+		photo = ImageTk.PhotoImage(Image.open('icons/back_arrow.png'))
+		left_header_icon = tk.Button(master, image=photo)
 		left_header_icon.image = photo
-		left_header_icon['bg'] = self.header_color
+		left_header_icon['highlightbackground'] = self.header_color
+		left_header_icon['highlightthickness'] = 0
+		left_header_icon['command'] = lambda: self.master.main_page.show()
 		return left_header_icon
 
 	def right_header_icon(self, master):

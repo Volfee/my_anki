@@ -1,5 +1,6 @@
 import tkinter as tk
 from page import Page
+from PIL import ImageTk, Image
 
 class AddFlashcard(Page):
 
@@ -63,7 +64,14 @@ class AddFlashcard(Page):
 		underscore['background'] = self.input_underscore_color
 		underscore.pack_propagate(False)
 		underscore.pack(side='top', fill='x')
-
 		return named_input_frame
+
+	# @overriden
+	def right_header_icon(self, master):
+		photo = ImageTk.PhotoImage(Image.open('icons/plus.png'))
+		right_header_icon = tk.Label(master, image=photo)
+		right_header_icon.image = photo
+		right_header_icon['bg'] = self.header_color
+		return right_header_icon
 
 

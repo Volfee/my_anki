@@ -1,5 +1,6 @@
 import tkinter as tk
 from page import Page
+from PIL import ImageTk, Image
 
 def overrides(interface_class):
     def overrider(method):
@@ -11,6 +12,7 @@ class MainPage(Page):
 
 	def __init__(self, *args, **kwargs):
 		self.page_name = 'My AnkiDroid'
+		self.master = kwargs['master']
 		Page.__init__(self, *args, **kwargs)
 	
 	# @overridden
@@ -70,6 +72,25 @@ class MainPage(Page):
 		deck_divider['background'] = self.divider_color
 		deck_divider.pack_propagate(False)
 		return deck_divider
+
+	# @overriden
+	def left_header_icon(self, master):
+		photo = ImageTk.PhotoImage(Image.open('icons/flashcards.png'))
+		left_header_icon = tk.Label(master, image=photo)
+		left_header_icon.image = photo
+		left_header_icon['bg'] = self.header_color
+		return left_header_icon
+
+	# @overriden
+	def right_header_icon(self, master):
+		photo = ImageTk.PhotoImage(Image.open('icons/plus.png'))
+		right_header_icon = tk.Button(master, image=photo)
+		right_header_icon.image = photo
+		right_header_icon['highlightbackground'] = self.header_color
+		right_header_icon['highlightthickness'] = 0
+		right_header_icon['command'] = lambda: self.master.add_flashcard_page.show()
+		return right_header_icon
+
 
 """
 	def add_flashcard_frame(self):
