@@ -1,8 +1,11 @@
 import tkinter as tk
 from PIL import ImageTk, Image
+from backend.interface import UserInterface
 
 
 class Page(tk.Frame):
+
+	interface = UserInterface()
 
 	page_name = 'default'
 	background_color = '#f7fff7'

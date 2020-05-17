@@ -1,8 +1,11 @@
+import sys
+sys.path.append('../')
+
 import sqlite3
 
 class Flashcard:
 
-	db = 'storage/flashcards.db'
+	db = 'backend/storage/flashcards.db'
 
 	def __init__(self, front, back, deck='default', review_due=None):
 		self.front = front
@@ -11,7 +14,7 @@ class Flashcard:
 		self._review_due = review_due
 
 	def __repr__(self):
-		return f"Flashcard('{self.front}', '{self.back}')"
+		return f"Flashcard('{self.front}', '{self.back}', '{self.deck}')"
 
 	def save_to_db(self):
 		conn = sqlite3.connect(self.db)

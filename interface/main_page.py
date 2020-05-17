@@ -2,20 +2,25 @@ import tkinter as tk
 from page import Page
 from PIL import ImageTk, Image
 
-def overrides(interface_class):
-    def overrider(method):
-        assert(method.__name__ in dir(interface_class))
-        return method
-    return overrider
-
 class MainPage(Page):
 
 	def __init__(self, *args, **kwargs):
 		self.page_name = 'My AnkiDroid'
 		self.master = kwargs['master']
+		# self.update()
 		Page.__init__(self, *args, **kwargs)
+
+	# # @overriden
+	# def show(self):
+	# 	self.update()
+	# 	self.lift()
 	
-	# @overridden
+	# def update(self):
+	# 	# get list of decks
+	# 	# get list of flashcards
+	# 	pass
+
+	# @overriden
 	def body_container(self, master):
 		body = tk.Frame(master)
 		body['background'] = self.background_color
@@ -25,7 +30,7 @@ class MainPage(Page):
 	def list_of_decks_frame(self, master):
 		list_of_decks = tk.Frame(master)
 		list_of_decks['background'] = self.background_color
-		decks = ['Default', 'Python', 'Java']
+		decks = self.interface.get_deck_names()
 		self.deck_divider_frame(list_of_decks).pack(side='top', fill='x')
 		for deck_name in decks:
 			self.deck_frame(list_of_decks, deck_name).pack(side='top', fill='x')
@@ -58,10 +63,10 @@ class MainPage(Page):
 		deck_review_button['highlightbackground'] = self.background_color
 		return deck_review_button
 
-
 	def deck_review_count_label(self, master, name):
 		deck_review_count = tk.Label(master)
-		deck_review_count['text'] = "Cards: 10"
+		deck_count = self.interface.num_cards_for_review(deck=name)
+		deck_review_count['text'] = f"Cards: {deck_count}"
 		deck_review_count['padx'] = 15
 		deck_review_count['background'] = self.background_color
 		return deck_review_count
@@ -90,25 +95,3 @@ class MainPage(Page):
 		right_header_icon['highlightthickness'] = 0
 		right_header_icon['command'] = lambda: self.master.add_flashcard_page.show()
 		return right_header_icon
-
-
-"""
-	def add_flashcard_frame(self):
-		self.add_flashcard = tk.Frame(self)
-		self.add_flashcard['background'] = self.head_frame_color
-		self.add_flashcard['height'] = 60
-		self.add_flashcard['width'] = 400
-		self.add_flashcard['bg'] = self.head_frame_color
-		self.add_flashcard.pack_propagate(False)
-		self.add_flashcard.pack(side='bottom')
-		self.create_flashcard_button()
-
-	def create_flashcard_button(self):
-		self.add_flashcard_button = tk.Button(self.add_flashcard)
-		self.add_flashcard_button['text'] = "Add new flashcard"
-		self.add_flashcard_button['command'] = self.master.add_flashcard_page.show
-		self.add_flashcard_button['height'] = 60
-		self.add_flashcard_button['width'] = 400
-		self.add_flashcard_button['highlightbackground'] = self.head_frame_color
-		self.add_flashcard_button.pack(side='bottom')
-"""
