@@ -8,16 +8,18 @@ class MainView(tk.Frame):
 		tk.Frame.__init__(self, *args, **kwargs)
 		self.add_flashcard_page = AddFlashcard(master=self)
 		self.main_page = MainPage(master=self)
-		self.review_page = ReviewPage(master=self)
-
 		
-		container = tk.Frame(self)
-		container.pack(side="top", fill="both", expand=True)
-		self.main_page.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
-		self.add_flashcard_page.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
-		self.review_page.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
+		self.container = tk.Frame(self)
+		self.container.pack(side="top", fill="both", expand=True)
+		self.main_page.place(in_=self.container, x=0, y=0, relwidth=1, relheight=1)
+		self.add_flashcard_page.place(in_=self.container, x=0, y=0, relwidth=1, relheight=1)
+		
 
 		self.main_page.show()
+
+	def create_new_review_page(self, review):
+		self.review_page = ReviewPage(master=self, review=review)
+		self.review_page.place(in_=self.container, x=0, y=0, relwidth=1, relheight=1)
 
 app = tk.Tk()
 app.title("My AnkiDroid Clone")

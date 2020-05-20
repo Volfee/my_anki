@@ -6,13 +6,10 @@ import collections
 class Review:
 
 	def __init__(self, cards):
-		self.cards = collections.deque(list(cards))
+		self.cards = collections.deque(cards)
 		self.current_card = None
 
 	def next_card(self):
-		if self.current_card:
-			print("Still pending answer.")
-			return None
 		self.current_card = self.cards.popleft()
 		return self.current_card
 
@@ -28,3 +25,7 @@ class Review:
 
 	def is_finished(self):
 		return not len(self.cards)
+
+	@property
+	def cards_left(self):
+		return len(self.cards)

@@ -4,7 +4,7 @@ from backend.review import Review
 
 class UserInterface:
 
-	current_time = 2 # temp 
+	current_time = 10 # temp 
 	sm = StorageManager()
 
 	def create_new_card(self, front, back, deck='default', due=None):
@@ -30,18 +30,6 @@ class UserInterface:
 		pending_cards = self.sm.get_pending_cards(deck, self.current_time)
 		return Review(pending_cards)
 
-	def start_review(self, review):
-		print("Starting review")
-		while not review.is_finished():
-			card = review.next_card()
-			input(card.front)
-			print(card.back)
-			is_correct = input("Correct answer? (y/n): ")
-			if is_correct == 'y':
-				review.correct_answer()
-			else:
-				review.wrong_answer()
-
 	def get_deck_names(self):
 		deck_names = self.sm.get_deck_names()
 		return list(deck_names)
@@ -49,9 +37,6 @@ class UserInterface:
 	def num_cards_for_review(self, deck):
 		count = self.sm.num_cards_for_review(deck, self.current_time)
 		return count
-
-	def update_due_date(self, flashcard):
-		flashcard.review_due = flashcard.review_due * 2 + 1 
 
 
 

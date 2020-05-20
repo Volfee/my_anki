@@ -10,22 +10,15 @@ class ReviewPage(Page):
 	input_label_font = 'Verdana', 15
 	input_font = 'Verdana', 25
 
-	ui = UserInterface()
-
-
 	def __init__(self, *args, **kwargs):
 		self.master = kwargs['master']
-		self.cards = collections.deque([Flashcard('samochod', 'car', 'default', 2),
-											  Flashcard('narty', 'ski', 'default', 1)])
+		self.review = kwargs.pop('review')
 		
 		self.deck_name = 'default'
-		self.remaining_cards = tk.IntVar()
-		self.remaining_cards.set(len(self.cards))
-		self.page_name = f"{self.deck_name} | Cards left: {self.remaining_cards.get()}."
-		self.card = self.cards.popleft()
+		self.page_name = f"{self.deck_name} | Cards left: 2."
+		self.card = self.review.next_card()
 		Page.__init__(self, *args, **kwargs)
 		
-
 	# @overriden
 	def body_container(self, master):
 		self.body = tk.Frame(master)
@@ -101,20 +94,18 @@ class ReviewPage(Page):
 		return self._good_answer_button
 
 	def wrong_answer_action(self):
-		self.cards.append(self.card)
-		self.card = self.cards.popleft()
+		self.review.wrong_answer()
 		self.next_card()
 
 	def good_answer_action(self):
-		self.ui.update_due_date(self.card)
-		if len(self.cards):
+		self.review.correct_answer()
+		if self.review.cards_left:
 			self.next_card()
 		else:
-			# Go to main menu
-			pass
+			self.master.main_page.show()
 
 	def next_card(self):
-		self.card = self.cards.popleft()
+		self.card = self.review.next_card()
 
 		# Remove old card interface
 		self.front_frame.destroy()

@@ -61,7 +61,13 @@ class MainPage(Page):
 		deck_review_button = tk.Button(master)
 		deck_review_button['text'] = 'Review'
 		deck_review_button['highlightbackground'] = self.background_color
+		deck_review_button['command'] = lambda: self.start_deck_review_action(name)
 		return deck_review_button
+
+	def start_deck_review_action(self, deck_name):
+		review = self.interface.create_review(deck_name)
+		self.master.create_new_review_page(review)
+		self.master.review_page.show()
 
 	def deck_review_count_label(self, master, name):
 		deck_review_count = tk.Label(master)

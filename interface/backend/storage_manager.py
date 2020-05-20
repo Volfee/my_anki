@@ -41,16 +41,19 @@ class StorageManager:
 		return all_cards
 
 	def get_pending_cards(self, deck, time):
+		pending_cards = list()
 		conn = sqlite3.connect(self.db_location)
 		cursor = conn.execute("""
 			SELECT front, back, deck, review_due 
 			FROM flashcards
 			WHERE review_due <= (?)
-			""", tuple(time))
+			AND deck = (?)
+			""", (time,deck))
 		for card in cursor:
 			front, back, deck, review_due = card
-			yield Flashcard(front, back, deck, review_due)
+			pending_cards.append(Flashcard(front, back, deck, review_due))
 		conn.close()
+		return pending_cards
 
 	def get_deck_names(self):
 		conn = sqlite3.connect(self.db_location)
