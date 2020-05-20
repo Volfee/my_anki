@@ -10,6 +10,8 @@ class ReviewPage(Page):
 	input_label_font = 'Verdana', 15
 	input_font = 'Verdana', 25
 
+	ui = UserInterface()
+
 
 	def __init__(self, *args, **kwargs):
 		self.master = kwargs['master']
@@ -104,22 +106,23 @@ class ReviewPage(Page):
 		self.next_card()
 
 	def good_answer_action(self):
+		self.ui.update_due_date(self.card)
 		if len(self.cards):
-			self.card = self.cards.popleft()
 			self.next_card()
 		else:
 			# Go to main menu
 			pass
 
 	def next_card(self):
-		# Remove old card.
-		self.master.update_idletasks()
+		self.card = self.cards.popleft()
+
+		# Remove old card interface
 		self.front_frame.destroy()
 		self.back_frame.destroy()
 		self._wrong_answer_button.destroy()
 		self._good_answer_button.destroy()
 
-		# Create new cards.
+		# Create new card interface.
 		self.front_frame = self.flashcard_frame(self.body, "Front", self.card.front)
 		self.front_frame.pack(side='top', fill='both')
 		self.back_frame = self.flashcard_frame(self.body, "Back", self.card.back)

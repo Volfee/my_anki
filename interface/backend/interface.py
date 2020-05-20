@@ -1,6 +1,3 @@
-import sys
-sys.path.append('../')
-
 from backend.flashcards import Flashcard
 from backend.storage_manager import StorageManager
 from backend.review import Review
@@ -52,6 +49,11 @@ class UserInterface:
 	def num_cards_for_review(self, deck):
 		count = self.sm.num_cards_for_review(deck, self.current_time)
 		return count
+
+	def update_due_date(self, flashcard):
+		flashcard.review_due = flashcard.review_due * 2 + 1 
+
+
 
 ui = UserInterface()
 k = ui.get_deck_names()

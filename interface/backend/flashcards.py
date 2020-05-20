@@ -1,6 +1,3 @@
-import sys
-sys.path.append('../')
-
 import sqlite3
 
 class Flashcard:
@@ -14,7 +11,7 @@ class Flashcard:
 		self._review_due = review_due
 
 	def __repr__(self):
-		return f"Flashcard('{self.front}', '{self.back}', '{self.deck}')"
+		return f"Flashcard('{self.front}', '{self.back}', '{self.deck}', '{self._review_due}')"
 
 	def save_to_db(self):
 		conn = sqlite3.connect(self.db)
@@ -32,7 +29,6 @@ class Flashcard:
 	@review_due.setter
 	def review_due(self, new_due_date):
 		self._review_due = new_due_date
-		self.update_due_date(new_due_date)
 		conn = sqlite3.connect(self.db)
 		conn.execute("""
 			UPDATE flashcards

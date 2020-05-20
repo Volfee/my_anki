@@ -28,14 +28,17 @@ class StorageManager:
 		return os.path.isfile(self.db_location)
 
 	def load_all_cards(self):
+		all_cards = list()
 		conn = sqlite3.connect(self.db_location)
 		cursor = conn.execute("""
 			SELECT front, back, deck, review_due FROM flashcards
 			""")
+
 		for card in cursor:
 			front, back, deck, review_due = card
-			yield Flashcard(front, back, deck, review_due)
+			all_cards.append(Flashcard(front, back, deck, review_due))
 		conn.close()
+		return all_cards
 
 	def get_pending_cards(self, deck, time):
 		conn = sqlite3.connect(self.db_location)
