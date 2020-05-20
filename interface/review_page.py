@@ -13,15 +13,14 @@ class ReviewPage(Page):
 
 	def __init__(self, *args, **kwargs):
 		self.master = kwargs['master']
-		ReviewPage.cards = collections.deque([Flashcard('samochod', 'car', 'default', 2),
+		self.cards = collections.deque([Flashcard('samochod', 'car', 'default', 2),
 											  Flashcard('narty', 'ski', 'default', 1)])
-
-		deck_name = 'default'
-		cards_left = 5
-
-		self.page_name = f"{deck_name} | Cards left: {cards_left}."
-		self.answer_displayed = False
-		self.card = ReviewPage.cards.popleft()
+		
+		self.deck_name = 'default'
+		self.remaining_cards = tk.IntVar()
+		self.remaining_cards.set(len(self.cards))
+		self.page_name = f"{self.deck_name} | Cards left: {self.remaining_cards.get()}."
+		self.card = self.cards.popleft()
 		Page.__init__(self, *args, **kwargs)
 		
 
@@ -29,8 +28,9 @@ class ReviewPage(Page):
 	def body_container(self, master):
 		self.body = tk.Frame(master)
 		self.body['background'] = self.background_color
-		self.flashcard_frame(self.body, "Front", self.card.front) \
-							.pack(side='top', fill='both')
+		self.front_frame = self.flashcard_frame(self.body, "Front", self.card.front)
+		self.front_frame.pack(side='top', fill='both')
+		self.back_frame = self.flashcard_frame(self.body, "Back", self.card.back)
 		return self.body
 
 	def flashcard_frame(self, master, label, value):
@@ -72,42 +72,64 @@ class ReviewPage(Page):
 		return self.answer_button
 
 	def show_answer(self):
-		if not self.answer_displayed:
-			self.flashcard_frame(self.body, "Back", self.card.back) \
-								.pack(side='top', fill='x')
-			self.answer_displayed = True
-			self.answer_button.destroy()
-			self.wrong_answer_button(self.footer_frame) \
-							.pack(side='left', fill='both', expand=True)
-			self.good_answer_button(self.footer_frame)\
-							.pack(side='right', fill='both', expand=True)
+		self.back_frame.pack(side='top', fill='x')
+		self.answer_displayed = True
+		self.answer_button.destroy()
+		self.wrong_answer_button(self.footer_frame) \
+						.pack(side='left', fill='both', expand=True)
+		self.good_answer_button(self.footer_frame)\
+						.pack(side='right', fill='both', expand=True)
 			# Change buttons to good / bad
 
 	def wrong_answer_button(self, master):
-		wrong_answer = tk.Button(master)
-		wrong_answer['text'] = 'Wrong'
-		wrong_answer['highlightbackground'] = 'red'
-		wrong_answer['height'] = 5
-		return wrong_answer
+		self._wrong_answer_button = tk.Button(master)
+		self._wrong_answer_button['text'] = 'Wrong'
+		self._wrong_answer_button['command'] = self.wrong_answer_action
+		self._wrong_answer_button['highlightbackground'] = 'red'
+		self._wrong_answer_button['height'] = 5
+		return self._wrong_answer_button
 
 	def good_answer_button(self, master):
-		good_answer = tk.Button(master)
+		self._good_answer_button = tk.Button(master)
 		due_change = 2
-		good_answer['text'] = f'Good ({due_change}d)'
-		good_answer['highlightbackground'] = 'green'
-		good_answer['height'] = 5
-		good_answer['command'] = self.good_answer
-		return good_answer
+		self._good_answer_button['text'] = f'Good ({due_change}d)'
+		self._good_answer_button['command'] = self.good_answer_action
+		self._good_answer_button['highlightbackground'] = 'green'
+		self._good_answer_button['height'] = 5
+		return self._good_answer_button
 
-	def good_answer(self):
-		self.master.review_page = ReviewPage(master=self.master)
-		self.master.review_page.show()
+	def wrong_answer_action(self):
+		self.cards.append(self.card)
+		self.card = self.cards.popleft()
+		self.next_card()
+
+	def good_answer_action(self):
+		if len(self.cards):
+			self.card = self.cards.popleft()
+			self.next_card()
+		else:
+			# Go to main menu
+			pass
+
+	def next_card(self):
+		# Remove old card.
+		self.master.update_idletasks()
+		self.front_frame.destroy()
+		self.back_frame.destroy()
+		self._wrong_answer_button.destroy()
+		self._good_answer_button.destroy()
+
+		# Create new cards.
+		self.front_frame = self.flashcard_frame(self.body, "Front", self.card.front)
+		self.front_frame.pack(side='top', fill='both')
+		self.back_frame = self.flashcard_frame(self.body, "Back", self.card.back)
+		self.show_answer_button(self.footer_frame).pack(side='bottom', fill='x')
 
 
 if __name__ == '__main__':
 	app = tk.Tk()
 	app.title("My AnkiDroid Clone")
-	main = ReviewPage(app)
+	main = ReviewPage(master=app)
 	main.pack(side="top", fill="both", expand=True)
 	app.geometry('400x800')
 	app.mainloop()
