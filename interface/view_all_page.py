@@ -17,12 +17,8 @@ class ViewAllPage(Page):
 		left_header_icon.image = photo
 		left_header_icon['highlightbackground'] = self.header_color
 		left_header_icon['highlightthickness'] = 0
-		left_header_icon['command'] = self.go_to_main_page
+		left_header_icon['command'] = self.master.show_main_page
 		return left_header_icon
-
-	def go_to_main_page(self):
-		self.reset_inputs(self.inputs['front'], self.inputs['back'])
-		self.master.main_page.show()
 	
 	# @overriden
 	def right_header_icon(self, master):
@@ -31,7 +27,7 @@ class ViewAllPage(Page):
 		right_header_icon.image = photo
 		right_header_icon['highlightbackground'] = self.header_color
 		right_header_icon['highlightthickness'] = 0
-		right_header_icon['command'] = lambda: self.master.add_flashcard_page.show()
+		right_header_icon['command'] = self.master.show_add_flashcard_page
 		return right_header_icon
 
 	# @overriden
@@ -127,6 +123,7 @@ class ViewAllPage(Page):
 		_edit_button = tk.Button(master)
 		_edit_button['text'] = 'edit'
 		_edit_button['highlightbackground'] = self.background_color
+		_edit_button['command'] = lambda: self.edit_flashcard(flashcard)
 		return _edit_button
 
 	def flashcard_divider(self, master):

@@ -7,18 +7,27 @@ class MainPage(Page):
 	def __init__(self, *args, **kwargs):
 		self.page_name = 'My AnkiDroid'
 		self.master = kwargs['master']
-		# self.update()
 		Page.__init__(self, *args, **kwargs)
 
-	# # @overriden
-	# def show(self):
-	# 	self.update()
-	# 	self.lift()
-	
-	# def update(self):
-	# 	# get list of decks
-	# 	# get list of flashcards
-	# 	pass
+	# @overriden
+	def left_header_icon(self, master):
+		photo = ImageTk.PhotoImage(Image.open('icons/flashcards.png'))
+		left_header_icon = tk.Button(master, image=photo)
+		left_header_icon.image = photo
+		left_header_icon['highlightbackground'] = self.header_color
+		left_header_icon['highlightthickness'] = 0
+		left_header_icon['command'] = self.master.show_view_all_page
+		return left_header_icon
+
+	# @overriden
+	def right_header_icon(self, master):
+		photo = ImageTk.PhotoImage(Image.open('icons/plus.png'))
+		right_header_icon = tk.Button(master, image=photo)
+		right_header_icon.image = photo
+		right_header_icon['highlightbackground'] = self.header_color
+		right_header_icon['highlightthickness'] = 0
+		right_header_icon['command'] = self.master.show_add_flashcard_page
+		return right_header_icon
 
 	# @overriden
 	def body_container(self, master):
@@ -66,8 +75,7 @@ class MainPage(Page):
 
 	def start_deck_review_action(self, deck_name):
 		review = self.interface.create_review(deck_name)
-		self.master.create_new_review_page(review)
-		self.master.review_page.show()
+		self.master.show_new_review_page(review)
 
 	def deck_review_count_label(self, master, name):
 		deck_review_count = tk.Label(master)
@@ -84,20 +92,3 @@ class MainPage(Page):
 		deck_divider.pack_propagate(False)
 		return deck_divider
 
-	# @overriden
-	def left_header_icon(self, master):
-		photo = ImageTk.PhotoImage(Image.open('icons/flashcards.png'))
-		left_header_icon = tk.Label(master, image=photo)
-		left_header_icon.image = photo
-		left_header_icon['bg'] = self.header_color
-		return left_header_icon
-
-	# @overriden
-	def right_header_icon(self, master):
-		photo = ImageTk.PhotoImage(Image.open('icons/plus.png'))
-		right_header_icon = tk.Button(master, image=photo)
-		right_header_icon.image = photo
-		right_header_icon['highlightbackground'] = self.header_color
-		right_header_icon['highlightthickness'] = 0
-		right_header_icon['command'] = lambda: self.master.add_flashcard_page.show()
-		return right_header_icon

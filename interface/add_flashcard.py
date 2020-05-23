@@ -101,11 +101,7 @@ class AddFlashcard(Page):
 		left_header_icon.image = photo
 		left_header_icon['highlightbackground'] = self.header_color
 		left_header_icon['highlightthickness'] = 0
-		left_header_icon['command'] = self.go_to_main_page
+		left_header_icon['command'] = self.master.show_main_page
 		return left_header_icon
-
-	def go_to_main_page(self):
-		self.reset_inputs(self.inputs['front'], self.inputs['back'])
-		self.master.main_page.show()
 
 

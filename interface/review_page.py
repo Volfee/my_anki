@@ -102,7 +102,7 @@ class ReviewPage(Page):
 		if self.review.cards_left:
 			self.next_card()
 		else:
-			self.master.main_page.show()
+			self.master.show_main_page()
 
 	def next_card(self):
 		self.card = self.review.next_card()

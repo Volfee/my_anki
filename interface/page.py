@@ -39,7 +39,7 @@ class Page(tk.Frame):
 		left_header_icon.image = photo
 		left_header_icon['highlightbackground'] = self.header_color
 		left_header_icon['highlightthickness'] = 0
-		left_header_icon['command'] = lambda: self.master.main_page.show()
+		left_header_icon['command'] = self.master.show_main_page
 		return left_header_icon
 
 	def right_header_icon(self, master):
