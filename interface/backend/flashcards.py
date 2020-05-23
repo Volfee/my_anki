@@ -41,6 +41,17 @@ class Flashcard:
 	def to_tuple(self):
 		return self.front, self.back, self.deck, self._review_due
 
+	def remove(self):
+		conn = sqlite3.connect(self.db)
+		conn.execute("""
+			DELETE FROM flashcards
+			WHERE front = (?) 
+			""", (self.front,))
+		conn.commit()
+		conn.close()
+		print(f"{self} removed from db.")
+
+
 
 class Base(Flashcard):
 	pass

@@ -46,7 +46,7 @@ class ViewAllPage(Page):
 
 	def scrolling_canvas(self, master):
 		self._scrolling_canvas = tk.Canvas(master)
-		self._scrolling_canvas['bg'] = 'red'
+		self._scrolling_canvas['bg'] = self.background_color
 		self.flashcards_frame(self._scrolling_canvas)
 		self._scrolling_canvas.bind("<Configure>", self.onCanvasConfigure)
 		return self._scrolling_canvas
@@ -66,39 +66,7 @@ class ViewAllPage(Page):
 		self._flashcards_frame = tk.Frame(master)
 		self._flashcards_frame.bind("<Configure>", self.onFrameConfigure)
 
-		test = []
-		test.append(Flashcard('car', 'samochod', 'default', 0))
-		test.append(Flashcard('firestick', 'raca', 'default', 0))
-		test.append(Flashcard('balon', 'baloon', 'default', 0))
-		test.append(Flashcard('kura', 'chicken', 'default', 0))
-		test.append(Flashcard('kat', 'killer man', 'default', 0))
-		test.append(Flashcard('dupa', 'ass', 'default', 0))
-		test.append(Flashcard('car', 'samochod', 'default', 0))
-		test.append(Flashcard('firestick', 'raca', 'default', 0))
-		test.append(Flashcard('balon', 'baloon', 'default', 0))
-		test.append(Flashcard('kura', 'chicken', 'default', 0))
-		test.append(Flashcard('kat', 'killer man', 'default', 0))
-		test.append(Flashcard('dupa', 'ass', 'default', 0))
-		test.append(Flashcard('car', 'samochod', 'default', 0))
-		test.append(Flashcard('firestick', 'raca', 'default', 0))
-		test.append(Flashcard('balon', 'baloon', 'default', 0))
-		test.append(Flashcard('car', 'samochod', 'default', 0))
-		test.append(Flashcard('firestick', 'raca', 'default', 0))
-		test.append(Flashcard('balon', 'baloon', 'default', 0))
-		test.append(Flashcard('kura', 'chicken', 'default', 0))
-		test.append(Flashcard('kat', 'killer man', 'default', 0))
-		test.append(Flashcard('dupa', 'ass', 'default', 0))
-		test.append(Flashcard('car', 'samochod', 'default', 0))
-		test.append(Flashcard('firestick', 'raca', 'default', 0))
-		test.append(Flashcard('balon', 'baloon', 'default', 0))
-		test.append(Flashcard('kura', 'chicken', 'default', 0))
-		test.append(Flashcard('kat', 'killer man', 'default', 0))
-		test.append(Flashcard('dupa', 'ass', 'default', 0))
-		test.append(Flashcard('car', 'samochod', 'default', 0))
-		test.append(Flashcard('firestick', 'raca', 'default', 0))
-		test.append(Flashcard('balon', 'baloon', 'default', 0))
-
-		for flashcard in test:
+		for flashcard in self.interface.load_all_cards():
 			self.flashcard_container(self._flashcards_frame, flashcard).pack(side='top', fill='x')
 			self.flashcard_divider(self._flashcards_frame).pack(side='top', fill='x')
 		return self._flashcards_frame
@@ -148,7 +116,12 @@ class ViewAllPage(Page):
 		_remove_button['text'] = 'x'
 		_remove_button['highlightbackground'] = self.background_color
 		_remove_button['width'] = 2
+		_remove_button['command'] = lambda: self.remove_flashcard(master, flashcard)
 		return _remove_button
+
+	def remove_flashcard(self, frame, flashcard):
+		flashcard.remove()
+		frame.destroy()
 
 	def edit_button(self, master, flashcard):
 		_edit_button = tk.Button(master)
