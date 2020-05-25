@@ -37,6 +37,7 @@ class Flashcard:
 			""", (self._front, self._front))
 		conn.commit()
 		conn.close()
+		print(f'{self} edited, front updated.')
 
 	@property
 	def back(self):
@@ -53,6 +54,7 @@ class Flashcard:
 			""", (self._back, self._front))
 		conn.commit()
 		conn.close()
+		print(f'{self} edited, back updated.')
 
 	@property
 	def review_due(self):
@@ -69,6 +71,7 @@ class Flashcard:
 			""", (self._review_due, self._front))
 		conn.commit()
 		conn.close()
+		print(f'{self} edited, review_due updated.')
 
 	def to_tuple(self):
 		return self._front, self._back, self.deck, self._review_due

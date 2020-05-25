@@ -3,6 +3,8 @@ from main_page import MainPage
 from add_flashcard import AddFlashcard
 from review_page import ReviewPage
 from view_all_page import ViewAllPage
+from edit_flashcard import EditFlashcard
+
 
 class MainView(tk.Frame):
 	def __init__(self, *args, **kwargs):
@@ -32,6 +34,10 @@ class MainView(tk.Frame):
 		self.add_flashcard_page.place(in_=self.container, x=0, y=0, relwidth=1, relheight=1)
 		self.add_flashcard_page.show()
 
+	def show_edit_flashcard_page(self, flashcard):
+		self.edit_flashcard_page = EditFlashcard(master=self, flashcard=flashcard)
+		self.edit_flashcard_page.place(in_=self.container, x=0, y=0, relwidth=1, relheight=1)
+		self.edit_flashcard_page.show()
 
 app = tk.Tk()
 app.title("My AnkiDroid Clone")

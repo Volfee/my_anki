@@ -3,7 +3,7 @@ from page import Page
 from add_flashcard import AddFlashcard
 from PIL import ImageTk, Image
 
-class EditCardPage(AddFlashcard):
+class EditFlashcard(AddFlashcard):
 
 	def __init__(self, flashcard, *args, **kwargs):
 		self.page_name = 'Edit flashcard'
@@ -39,7 +39,7 @@ class EditCardPage(AddFlashcard):
 		if self.flashcard.front != front:
 			self.flashcard.front = front
 
-		lambda: self.master.show_view_all_page()
+		self.master.show_view_all_page()
 
 	# @overriden
 	def named_input_entry(self, master, name):
@@ -60,7 +60,7 @@ if __name__ == '__main__':
 	app = tk.Tk()
 	app.title("My AnkiDroid Clone")
 	flash = Flashcard('samochod', 'car')
-	main = EditCardPage(master=app, flashcard=flash)
+	main = EditFlashcard(master=app, flashcard=flash)
 	main.pack(side="top", fill="both", expand=True)
 	app.geometry('400x800')
 	app.mainloop()

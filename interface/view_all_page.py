@@ -123,7 +123,7 @@ class ViewAllPage(Page):
 		_edit_button = tk.Button(master)
 		_edit_button['text'] = 'edit'
 		_edit_button['highlightbackground'] = self.background_color
-		_edit_button['command'] = lambda: self.edit_flashcard(flashcard)
+		_edit_button['command'] = lambda: self.master.show_edit_flashcard_page(flashcard)
 		return _edit_button
 
 	def flashcard_divider(self, master):
