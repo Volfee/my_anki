@@ -74,7 +74,6 @@ class ReviewPage(Page):
 						.pack(side='left', fill='both', expand=True)
 		self.good_answer_button(self.footer_frame)\
 						.pack(side='right', fill='both', expand=True)
-			# Change buttons to good / bad
 
 	def wrong_answer_button(self, master):
 		self._wrong_answer_button = tk.Button(master)
