@@ -66,16 +66,8 @@ class AddFlashcard(Page):
 		named_input_frame = tk.Frame(master)
 		named_input_frame['background'] = self.background_color
 		named_input_frame['padx'] = 15
-
-		named_input = tk.Entry(named_input_frame)
-		named_input['bg'] = self.background_color
-		named_input['borderwidth'] = 0
-		named_input['highlightthickness'] = 0
-		named_input['font'] = self.input_font
-		named_input['justify'] = 'center'
-		named_input.pack(side='top', fill='x')
-
-		self.inputs[name] = named_input
+		
+		self.named_input_entry(named_input_frame, name).pack(side='top', fill='x')
 
 		underscore = tk.Frame(named_input_frame)
 		underscore['height'] = 1
@@ -83,6 +75,16 @@ class AddFlashcard(Page):
 		underscore.pack_propagate(False)
 		underscore.pack(side='top', fill='x')
 		return named_input_frame
+
+	def named_input_entry(self, master, name):
+		_named_input = tk.Entry(master)
+		_named_input['bg'] = self.background_color
+		_named_input['borderwidth'] = 0
+		_named_input['highlightthickness'] = 0
+		_named_input['font'] = self.input_font
+		_named_input['justify'] = 'center'
+		self.inputs[name] = _named_input
+		return _named_input
 
 	# @overriden
 	def right_header_icon(self, master):
