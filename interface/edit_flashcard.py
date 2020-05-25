@@ -17,7 +17,7 @@ class EditCardPage(AddFlashcard):
 		left_header_icon.image = photo
 		left_header_icon['highlightbackground'] = self.header_color
 		left_header_icon['highlightthickness'] = 0
-		# left_header_icon['command'] = self.master.show_view_all_page()
+		left_header_icon['command'] = lambda: self.master.show_view_all_page
 		return left_header_icon
 
 	# @overriden
@@ -27,8 +27,19 @@ class EditCardPage(AddFlashcard):
 		right_header_icon.image = photo
 		right_header_icon['highlightbackground'] = self.header_color
 		right_header_icon['highlightthickness'] = 0
-		# right_header_icon['command'] = self.add_flashcard
+		right_header_icon['command'] = self.accept_changes
 		return right_header_icon
+
+	def accept_changes(self):
+		front = self.inputs['front'].get()
+		back = self.inputs['back'].get()
+
+		if self.flashcard.back != back:
+			self.flashcard.back = back
+		if self.flashcard.front != front:
+			self.flashcard.front = front
+
+		lambda: self.master.show_view_all_page()
 
 	# @overriden
 	def named_input_entry(self, master, name):
@@ -45,7 +56,6 @@ class EditCardPage(AddFlashcard):
 
 if __name__ == '__main__':
 	from backend.flashcards import Flashcard
-
 
 	app = tk.Tk()
 	app.title("My AnkiDroid Clone")

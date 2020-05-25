@@ -5,13 +5,13 @@ class Flashcard:
 	db = 'backend/storage/flashcards.db'
 
 	def __init__(self, front, back, deck='default', review_due=None):
-		self.front = front
-		self.back = back
+		self._front = front
+		self._back = back
 		self.deck = deck
 		self._review_due = review_due
 
 	def __repr__(self):
-		return f"Flashcard('{self.front}', '{self.back}', '{self.deck}', '{self._review_due}')"
+		return f"Flashcard('{self._front}', '{self._back}', '{self.deck}', '{self._review_due}')"
 
 	def save_to_db(self):
 		conn = sqlite3.connect(self.db)
@@ -19,6 +19,38 @@ class Flashcard:
 			INSERT INTO flashcards
 			VALUES (?, ?, ?, ?)
 			""", self.to_tuple())
+		conn.commit()
+		conn.close()
+
+	@property
+	def front(self):
+		return self._front
+
+	@front.setter
+	def front(self, new_front):
+		self._front = new_front
+		conn = sqlite3.connect(self.db)
+		conn.execute("""
+			UPDATE flashcards
+			SET front = (?)
+			WHERE front = (?) 
+			""", (self._front, self._front))
+		conn.commit()
+		conn.close()
+
+	@property
+	def back(self):
+		return self._back
+
+	@back.setter
+	def back(self, new_back):
+		self._back = new_back
+		conn = sqlite3.connect(self.db)
+		conn.execute("""
+			UPDATE flashcards
+			SET back = (?)
+			WHERE front = (?) 
+			""", (self._back, self._front))
 		conn.commit()
 		conn.close()
 
@@ -34,19 +66,19 @@ class Flashcard:
 			UPDATE flashcards
 			SET review_due = (?)
 			WHERE front = (?) 
-			""", (self._review_due, self.front))
+			""", (self._review_due, self._front))
 		conn.commit()
 		conn.close()
 
 	def to_tuple(self):
-		return self.front, self.back, self.deck, self._review_due
+		return self._front, self._back, self.deck, self._review_due
 
 	def remove(self):
 		conn = sqlite3.connect(self.db)
 		conn.execute("""
 			DELETE FROM flashcards
 			WHERE front = (?) 
-			""", (self.front,))
+			""", (self._front,))
 		conn.commit()
 		conn.close()
 		print(f"{self} removed from db.")
