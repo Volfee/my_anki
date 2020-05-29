@@ -4,6 +4,7 @@ from add_flashcard import AddFlashcard
 from review_page import ReviewPage
 from view_all_page import ViewAllPage
 from edit_flashcard import EditFlashcard
+from initial_setup import InitialSetup
 
 
 class MainView(tk.Frame):
@@ -39,6 +40,7 @@ class MainView(tk.Frame):
 		self.edit_flashcard_page.place(in_=self.container, x=0, y=0, relwidth=1, relheight=1)
 		self.edit_flashcard_page.show()
 
+InitialSetup.setup()
 app = tk.Tk()
 app.title("My AnkiDroid Clone")
 main = MainView(app)

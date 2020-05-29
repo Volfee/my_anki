@@ -14,12 +14,17 @@ class StorageManager:
 			# TODO: Db may exist but table may not.
 			self._create_db()
 
-	def _create_db(self):
+	def _create_database(self):
 		"""If DB is not found create new database."""
 		conn = sqlite3.connect(self.db_location)
 		conn.execute("""
 			CREATE TABLE flashcards 
 			(front text, back text, deck text, review_due int)
+			""")
+		conn.commit()
+		conn.execute("""
+			CREATE TABLE decks 
+			(deck text)
 			""")
 		conn.commit()
 		conn.close()
@@ -55,17 +60,6 @@ class StorageManager:
 		conn.close()
 		return pending_cards
 
-	def get_deck_names(self):
-		conn = sqlite3.connect(self.db_location)
-		cursor = conn.execute("""
-			SELECT deck
-			FROM flashcards
-			GROUP BY deck
-			""")
-		for deck in cursor:
-			yield deck[0]
-		conn.close()
-
 	def num_cards_for_review(self, deck_name, time):
 		conn = sqlite3.connect(self.db_location)
 		cursor = conn.execute("""
@@ -77,6 +71,25 @@ class StorageManager:
 		count = next(cursor)
 		conn.close()
 		return count[0]
+
+	def add_deck(self, deck_name):
+		conn = sqlite3.connect(self.db_location)
+		cursor = conn.execute("""
+			INSERT INTO decks
+			VALUES (?)
+			""", (deck_name,))
+		conn.commit()
+		conn.close()
+
+	def get_deck_names(self):
+		conn = sqlite3.connect(self.db_location)
+		cursor = conn.execute("""
+			SELECT deck
+			FROM decks
+			""")
+		for deck in cursor:
+			yield deck[0]
+		conn.close()
 
 	def clear_storage(self):
 		pass

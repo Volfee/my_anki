@@ -10,9 +10,17 @@ class UserInterface:
 	def create_new_card(self, front, back, deck='default', due=None):
 		if not due:
 			due = self.current_time
+		if self.is_new_deck(deck):
+			self.add_deck(deck)
 		flashcard = Flashcard(front, back, deck, review_due=due)
 		flashcard.save_to_db()
 		print(f"New {flashcard} created.")
+
+	def is_new_deck(self, deck_name):
+		return deck_name not in self.get_deck_names()
+
+	def add_deck(self, deck_name):
+		self.sm.add_deck(deck_name)
 
 	def load_all_cards(self):
 		cards = self.sm.load_all_cards()
@@ -40,8 +48,10 @@ class UserInterface:
 
 
 
-ui = UserInterface()
-k = ui.get_deck_names()
+
+
+# ui = UserInterface()
+# k = ui.get_deck_names()
 
 # if __name__ == "__main__":
 # 	ui = UserInterface()
