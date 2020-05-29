@@ -137,12 +137,12 @@ class MainPage(Page):
 
 	def new_deck_entry(self, master):
 		"""Entry field to set new name of deck."""
-		_new_deck_entry = tk.Entry(master)
-		_new_deck_entry.config(font=self.deck_font)
-		_new_deck_entry['background'] = self.background_color
-		_new_deck_entry['borderwidth'] = 0
-		_new_deck_entry['highlightthickness'] = 0
-		return _new_deck_entry
+		self._new_deck_entry = tk.Entry(master)
+		self._new_deck_entry.config(font=self.deck_font)
+		self._new_deck_entry['background'] = self.background_color
+		self._new_deck_entry['borderwidth'] = 0
+		self._new_deck_entry['highlightthickness'] = 0
+		return self._new_deck_entry
 
 	def new_deck_add_button(self, master):
 		"""Button to approve adding new deck."""
@@ -153,7 +153,9 @@ class MainPage(Page):
 		return _new_deck_add_button
 
 	def create_new_deck(self):
-		pass
+		deck_name = self._new_deck_entry.get()
+		self.interface.add_deck(deck_name)
+		self.master.show_main_page()
 
 	def new_deck_entry_underscore(self, master):
 		"""Frame that serves as underscore for entry field."""
@@ -162,9 +164,4 @@ class MainPage(Page):
 		underscore['background'] = self.input_underscore_color
 		underscore.pack_propagate(False)
 		return underscore
-
-
-
-
-
 

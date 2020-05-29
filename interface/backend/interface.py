@@ -14,13 +14,14 @@ class UserInterface:
 			self.add_deck(deck)
 		flashcard = Flashcard(front, back, deck, review_due=due)
 		flashcard.save_to_db()
-		print(f"New {flashcard} created.")
+		# print(f"New {flashcard} created.")
 
 	def is_new_deck(self, deck_name):
 		return deck_name not in self.get_deck_names()
 
 	def add_deck(self, deck_name):
-		self.sm.add_deck(deck_name)
+		if self.is_new_deck(deck_name):
+			self.sm.add_deck(deck_name)
 
 	def load_all_cards(self):
 		cards = self.sm.load_all_cards()
