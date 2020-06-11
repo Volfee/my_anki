@@ -2,6 +2,7 @@ import tkinter as tk
 from page import Page
 from PIL import ImageTk, Image
 from backend.interface import UserInterface
+from initial_setup import InitialSetup
 
 class AddFlashcard(Page):
 
@@ -20,8 +21,9 @@ class AddFlashcard(Page):
 	def add_flashcard(self):
 		front = self.inputs['front'].get()
 		back = self.inputs['back'].get()
+		deck = self.inputs['deck'].get()
 		if front and back:
-			self.interface.create_new_card(front, back)
+			self.interface.create_new_card(front, back, deck)
 			self.reset_inputs(self.inputs['front'], self.inputs['back'])
 		else:
 			print("Missing front or back.")
@@ -39,14 +41,36 @@ class AddFlashcard(Page):
 
 	def input_frame(self, master):
 		input_frame = tk.Frame(master)
+		self.deck_selection_frame(input_frame).pack(side='top', fill='x')
 		self.named_input_frame(input_frame, 'front').pack(side="top", fill="x")
 		self.named_input_frame(input_frame, 'back').pack(side="top", fill="x")
 		return input_frame
+
+	def deck_selection_frame(self, master):
+		_deck_selection_frame = tk.Frame(master)
+		_deck_selection_frame['bg'] = self.background_color
+		_deck_selection_frame['height'] = 80
+		_deck_selection_frame['padx'] = 15
+
+
+		_deck_selection_frame.pack_propagate(False)
+		self.named_input_label(_deck_selection_frame, "Deck").pack(side='top', fill='x')
+		self.deck_selection_combo(_deck_selection_frame).pack(side='top', fill='x')
+		return _deck_selection_frame
+
+	def deck_selection_combo(self, master):
+		decks = self.interface.get_deck_names()
+		self.inputs['deck'] = tk.StringVar(self.master)
+		self.inputs['deck'].set(decks[0])
+		_deck_selection_combo = tk.OptionMenu(master, self.inputs['deck'], *decks)
+		_deck_selection_combo['bg'] = self.background_color
+		return _deck_selection_combo
 
 	def named_input_frame(self, master, name):
 		named_input_frame = tk.Frame(master)
 		named_input_frame['height'] = 120
 		named_input_frame['background'] = self.background_color
+		named_input_frame['padx'] = 15
 		named_input_frame.pack_propagate(False)
 		self.named_input_label(named_input_frame, name).pack(side='top', fill='x')
 		self.named_input(named_input_frame, name).pack(side='top', fill='x')
@@ -58,14 +82,12 @@ class AddFlashcard(Page):
 		named_input_label['font'] = self.input_label_font
 		named_input_label['anchor'] = 'sw'
 		named_input_label['bg'] = self.background_color
-		named_input_label['padx'] = 20
 		named_input_label['pady'] = 15
 		return named_input_label
 
 	def named_input(self, master, name):
 		named_input_frame = tk.Frame(master)
 		named_input_frame['background'] = self.background_color
-		named_input_frame['padx'] = 15
 		
 		self.named_input_entry(named_input_frame, name).pack(side='top', fill='x')
 
@@ -103,7 +125,17 @@ class AddFlashcard(Page):
 		left_header_icon.image = photo
 		left_header_icon['highlightbackground'] = self.header_color
 		left_header_icon['highlightthickness'] = 0
-		left_header_icon['command'] = self.master.show_main_page
+		left_header_icon['command'] = lambda: self.master.show_main_page()
 		return left_header_icon
 
+def main():
+	InitialSetup.setup()
+	app = tk.Tk()
+	app.title("My AnkiDroid Clone")
+	main = AddFlashcard(app)
+	main.pack(side="top", fill="both", expand=True)
+	app.geometry('400x800')
+	app.mainloop()
 
+if __name__ == '__main__':
+	main()
