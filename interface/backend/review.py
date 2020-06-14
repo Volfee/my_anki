@@ -16,7 +16,7 @@ class Review:
 
 	def correct_answer(self):
 		self.current_card.correct_streak += 1
-		next_review_delta = 2 ** self.current_card.correct_streak
+		next_review_delta = self.next_review_delta(self.current_card.correct_streak)
 		next_review_date = dt.date.today() + dt.timedelta(days=next_review_delta)
 		self.current_card.review_due = next_review_date
 		print(f'Card due changed to {next_review_date}')
@@ -33,3 +33,6 @@ class Review:
 	@property
 	def cards_left(self):
 		return len(self.cards)
+
+	def next_review_delta(self, correct_streak):
+		return 2 ** correct_streak

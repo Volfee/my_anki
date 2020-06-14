@@ -10,12 +10,12 @@ class UserInterface:
 	current_date = datetime.date.today()
 	sm = StorageManager()
 
-	def create_new_card(self, front, back, deck='default', due=None):
+	def create_new_card(self, front, back, deck='default', due=None, correct_streak=0):
 		if not due:
 			due = self.current_date
 		if self.is_new_deck(deck):
 			self.add_deck(deck)
-		flashcard = Flashcard(front, back, deck, review_due=due)
+		flashcard = Flashcard(front, back, deck, review_due=due, correct_streak=correct_streak)
 		flashcard.save_to_db()
 		# print(f"New {flashcard} created.")
 

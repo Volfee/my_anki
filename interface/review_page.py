@@ -85,7 +85,7 @@ class ReviewPage(Page):
 
 	def good_answer_button(self, master):
 		self._good_answer_button = tk.Button(master)
-		due_change = 2
+		due_change = self.review.next_review_delta(self.card.correct_streak + 1)
 		self._good_answer_button['text'] = f'Good ({due_change}d)'
 		self._good_answer_button['command'] = self.good_answer_action
 		self._good_answer_button['highlightbackground'] = 'green'

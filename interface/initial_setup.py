@@ -36,7 +36,7 @@ class InitialSetup():
 		InitialSetup.ui.create_new_card('fridge', 'lodowka', due=InitialSetup.date_offset(3))
 		InitialSetup.ui.create_new_card('newspaper', 'gazeta', due=InitialSetup.date_offset(-2))
 		InitialSetup.ui.create_new_card('lightbulb', 'zarowka', due=InitialSetup.date_offset(-3))
-		InitialSetup.ui.create_new_card('kon', 'el poyo', 'spanish')
+		InitialSetup.ui.create_new_card('kon', 'el poyo', 'spanish', correct_streak=3)
 		InitialSetup.ui.create_new_card('money', 'las platas', 'spanish')
 		InitialSetup.ui.create_new_card('coke', 'el coke', 'spanish', due=InitialSetup.date_offset(1))
 		InitialSetup.ui.create_new_card('paella', 'paella', 'spanish', due=InitialSetup.date_offset(2))
