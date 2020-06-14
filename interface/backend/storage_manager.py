@@ -1,6 +1,21 @@
 import sqlite3
 import os
+import datetime as dt
 from backend.flashcards import Flashcard
+
+"""
+Flashcards (DB):
+
+flashcards (Table):
+	 front text
+	 back text
+	 deck text
+	 review_due int
+
+decks (Table):
+	deck text
+
+"""
 
 class StorageManager:
 	"""Handles saving and loading flashcards from drive."""
@@ -14,12 +29,17 @@ class StorageManager:
 			# TODO: Db may exist but table may not.
 			self._create_db()
 
-	def _create_db(self):
+	def _create_database(self):
 		"""If DB is not found create new database."""
 		conn = sqlite3.connect(self.db_location)
 		conn.execute("""
 			CREATE TABLE flashcards 
-			(front text, back text, deck text, review_due int)
+			(front text, back text, deck text, review_due int, correct_streak int)
+			""")
+		conn.commit()
+		conn.execute("""
+			CREATE TABLE decks 
+			(deck text)
 			""")
 		conn.commit()
 		conn.close()
@@ -31,12 +51,12 @@ class StorageManager:
 		all_cards = list()
 		conn = sqlite3.connect(self.db_location)
 		cursor = conn.execute("""
-			SELECT front, back, deck, review_due FROM flashcards
+			SELECT front, back, deck, review_due, correct_streak FROM flashcards
 			""")
-
 		for card in cursor:
-			front, back, deck, review_due = card
-			all_cards.append(Flashcard(front, back, deck, review_due))
+			front, back, deck, review_due_ordinal, correct_streak = card
+			review_due = dt.date.fromordinal(review_due_ordinal)
+			all_cards.append(Flashcard(front, back, deck, review_due, correct_streak))
 		conn.close()
 		return all_cards
 
@@ -44,27 +64,17 @@ class StorageManager:
 		pending_cards = list()
 		conn = sqlite3.connect(self.db_location)
 		cursor = conn.execute("""
-			SELECT front, back, deck, review_due 
+			SELECT front, back, deck, review_due, correct_streak
 			FROM flashcards
 			WHERE review_due <= (?)
 			AND deck = (?)
 			""", (time,deck))
 		for card in cursor:
-			front, back, deck, review_due = card
-			pending_cards.append(Flashcard(front, back, deck, review_due))
+			front, back, deck, review_due_ordinal, correct_streak = card
+			review_due = dt.date.fromordinal(review_due_ordinal)
+			pending_cards.append(Flashcard(front, back, deck, review_due, correct_streak))
 		conn.close()
 		return pending_cards
-
-	def get_deck_names(self):
-		conn = sqlite3.connect(self.db_location)
-		cursor = conn.execute("""
-			SELECT deck
-			FROM flashcards
-			GROUP BY deck
-			""")
-		for deck in cursor:
-			yield deck[0]
-		conn.close()
 
 	def num_cards_for_review(self, deck_name, time):
 		conn = sqlite3.connect(self.db_location)
@@ -77,6 +87,25 @@ class StorageManager:
 		count = next(cursor)
 		conn.close()
 		return count[0]
+
+	def add_deck(self, deck_name):
+		conn = sqlite3.connect(self.db_location)
+		cursor = conn.execute("""
+			INSERT INTO decks
+			VALUES (?)
+			""", (deck_name,))
+		conn.commit()
+		conn.close()
+
+	def get_deck_names(self):
+		conn = sqlite3.connect(self.db_location)
+		cursor = conn.execute("""
+			SELECT deck
+			FROM decks
+			""")
+		for deck in cursor:
+			yield deck[0]
+		conn.close()
 
 	def clear_storage(self):
 		pass

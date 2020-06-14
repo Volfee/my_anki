@@ -1,4 +1,5 @@
 import sys
+import datetime as dt
 sys.path.append('../')
 
 import collections
@@ -14,12 +15,15 @@ class Review:
 		return self.current_card
 
 	def correct_answer(self):
-		new_due_date = (self.current_card.review_due + 1) * 2
-		self.current_card.review_due = new_due_date
-		print(f'Card due changed to {new_due_date}')
+		self.current_card.correct_streak += 1
+		next_review_delta = self.next_review_delta(self.current_card.correct_streak)
+		next_review_date = dt.date.today() + dt.timedelta(days=next_review_delta)
+		self.current_card.review_due = next_review_date
+		print(f'Card due changed to {next_review_date}')
 		self.current_card = None
 
 	def wrong_answer(self):
+		self.current_card.correct_streak = 0
 		self.cards.append(self.current_card)
 		self.current_card = None
 
@@ -29,3 +33,6 @@ class Review:
 	@property
 	def cards_left(self):
 		return len(self.cards)
+
+	def next_review_delta(self, correct_streak):
+		return 2 ** correct_streak

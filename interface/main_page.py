@@ -4,6 +4,9 @@ from PIL import ImageTk, Image
 
 class MainPage(Page):
 
+	input_underscore_color = '#939692'
+	deck_font = ("SFNS", 18)
+
 	def __init__(self, *args, **kwargs):
 		self.page_name = 'My AnkiDroid'
 		self.master = kwargs['master']
@@ -37,14 +40,15 @@ class MainPage(Page):
 		return body
 
 	def list_of_decks_frame(self, master):
-		list_of_decks = tk.Frame(master)
-		list_of_decks['background'] = self.background_color
+		self._list_of_decks = tk.Frame(master)
+		self._list_of_decks['background'] = self.background_color
 		decks = self.interface.get_deck_names()
-		self.deck_divider_frame(list_of_decks).pack(side='top', fill='x')
+		self.deck_divider_frame(self._list_of_decks).pack(side='top', fill='x')
 		for deck_name in decks:
-			self.deck_frame(list_of_decks, deck_name).pack(side='top', fill='x')
-			self.deck_divider_frame(list_of_decks).pack(side='top', fill='x')
-		return list_of_decks
+			self.deck_frame(self._list_of_decks, deck_name).pack(side='top', fill='x')
+			self.deck_divider_frame(self._list_of_decks).pack(side='top', fill='x')
+		self.add_deck_frame(self._list_of_decks).pack(side='top', fill='x')
+		return self._list_of_decks
 
 	def deck_frame(self, master, name):
 		deck = tk.Frame(master)
@@ -62,7 +66,7 @@ class MainPage(Page):
 	def deck_name(self, master, name):
 		deck_name = tk.Label(master)
 		deck_name['text'] = name
-		deck_name.config(font=("SFNS", 18))
+		deck_name.config(font=self.deck_font)
 		deck_name['background'] = self.background_color
 		return deck_name
 
@@ -91,4 +95,73 @@ class MainPage(Page):
 		deck_divider['background'] = self.divider_color
 		deck_divider.pack_propagate(False)
 		return deck_divider
+
+	def add_deck_frame(self, master):
+		self._add_deck_frame = tk.Frame(master)
+		self._add_deck_frame['pady'] = 10
+		self._add_deck_frame['height'] = 40
+		self._add_deck_frame['bg'] = self.background_color
+		self._add_deck_frame.pack_propagate(False)
+		self.add_deck_button(self._add_deck_frame).pack(side='top')
+		return self._add_deck_frame
+
+	def add_deck_button(self, master):
+		_add_deck_button = tk.Button(master)
+		_add_deck_button['text'] = "Create new deck"
+		_add_deck_button['highlightbackground'] = self.background_color
+		_add_deck_button['command'] = self.new_deck_creator
+		return _add_deck_button
+
+	def new_deck_creator(self):
+		self._add_deck_frame.destroy()
+		self.new_deck_frame(self._list_of_decks).pack(side='top', fill='x')
+		self.deck_divider_frame(self._list_of_decks).pack(side='top', fill='x')
+
+	def new_deck_frame(self, master):
+		""" Appears after add deck button ic clicked.
+			Contains entry field and add button."""
+		self._new_deck_frame = tk.Frame(master)
+		self._new_deck_frame['height'] = 40
+		self._new_deck_frame['bg'] = self.background_color
+		self._new_deck_frame.pack_propagate(False)
+		self.new_deck_entry_frame(self._new_deck_frame).pack(side='left', padx=20)
+		self.new_deck_add_button(self._new_deck_frame).pack(side='left', padx=5)
+		return self._new_deck_frame
+
+	def new_deck_entry_frame(self, master):
+		"""Frame containing entry field and underscore for entry field."""
+		_new_deck_entry_frame = tk.Frame(master)
+		self.new_deck_entry(_new_deck_entry_frame).pack()
+		self.new_deck_entry_underscore(_new_deck_entry_frame).pack(side='top', fill='x')
+		return _new_deck_entry_frame
+
+	def new_deck_entry(self, master):
+		"""Entry field to set new name of deck."""
+		self._new_deck_entry = tk.Entry(master)
+		self._new_deck_entry.config(font=self.deck_font)
+		self._new_deck_entry['background'] = self.background_color
+		self._new_deck_entry['borderwidth'] = 0
+		self._new_deck_entry['highlightthickness'] = 0
+		return self._new_deck_entry
+
+	def new_deck_add_button(self, master):
+		"""Button to approve adding new deck."""
+		_new_deck_add_button = tk.Button(master)
+		_new_deck_add_button['text'] = "Add"
+		_new_deck_add_button['highlightbackground'] = self.background_color
+		_new_deck_add_button['command'] = self.create_new_deck
+		return _new_deck_add_button
+
+	def create_new_deck(self):
+		deck_name = self._new_deck_entry.get()
+		self.interface.add_deck(deck_name)
+		self.master.show_main_page()
+
+	def new_deck_entry_underscore(self, master):
+		"""Frame that serves as underscore for entry field."""
+		underscore = tk.Frame(master)
+		underscore['height'] = 1
+		underscore['background'] = self.input_underscore_color
+		underscore.pack_propagate(False)
+		return underscore
 
