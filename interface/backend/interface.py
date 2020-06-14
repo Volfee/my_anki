@@ -1,15 +1,18 @@
+import datetime
 from backend.flashcards import Flashcard
 from backend.storage_manager import StorageManager
 from backend.review import Review
 
+
 class UserInterface:
 
-	current_time = 10 # temp 
+	# TODO: This must be changed to seed date and then to current date.
+	current_date = datetime.date.today()
 	sm = StorageManager()
 
 	def create_new_card(self, front, back, deck='default', due=None):
 		if not due:
-			due = self.current_time
+			due = self.current_date
 		if self.is_new_deck(deck):
 			self.add_deck(deck)
 		flashcard = Flashcard(front, back, deck, review_due=due)
@@ -36,7 +39,7 @@ class UserInterface:
 		cards = self.sm.remove_card(flashcard)
 
 	def create_review(self, deck=None):
-		pending_cards = self.sm.get_pending_cards(deck, self.current_time)
+		pending_cards = self.sm.get_pending_cards(deck, self.current_date.toordinal())
 		return Review(pending_cards)
 
 	def get_deck_names(self):
@@ -44,11 +47,8 @@ class UserInterface:
 		return list(deck_names)
 
 	def num_cards_for_review(self, deck):
-		count = self.sm.num_cards_for_review(deck, self.current_time)
+		count = self.sm.num_cards_for_review(deck, self.current_date.toordinal())
 		return count
-
-
-
 
 
 # ui = UserInterface()

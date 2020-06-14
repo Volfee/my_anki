@@ -1,6 +1,21 @@
 import sqlite3
 import os
+import datetime as dt
 from backend.flashcards import Flashcard
+
+"""
+Flashcards (DB):
+
+flashcards (Table):
+	 front text
+	 back text
+	 deck text
+	 review_due int
+
+decks (Table):
+	deck text
+
+"""
 
 class StorageManager:
 	"""Handles saving and loading flashcards from drive."""
@@ -19,7 +34,7 @@ class StorageManager:
 		conn = sqlite3.connect(self.db_location)
 		conn.execute("""
 			CREATE TABLE flashcards 
-			(front text, back text, deck text, review_due int)
+			(front text, back text, deck text, review_due int, correct_streak int)
 			""")
 		conn.commit()
 		conn.execute("""
@@ -36,12 +51,12 @@ class StorageManager:
 		all_cards = list()
 		conn = sqlite3.connect(self.db_location)
 		cursor = conn.execute("""
-			SELECT front, back, deck, review_due FROM flashcards
+			SELECT front, back, deck, review_due, correct_streak FROM flashcards
 			""")
-
 		for card in cursor:
-			front, back, deck, review_due = card
-			all_cards.append(Flashcard(front, back, deck, review_due))
+			front, back, deck, review_due_ordinal, correct_streak = card
+			review_due = dt.date.fromordinal(review_due_ordinal)
+			all_cards.append(Flashcard(front, back, deck, review_due, correct_streak))
 		conn.close()
 		return all_cards
 
@@ -49,14 +64,15 @@ class StorageManager:
 		pending_cards = list()
 		conn = sqlite3.connect(self.db_location)
 		cursor = conn.execute("""
-			SELECT front, back, deck, review_due 
+			SELECT front, back, deck, review_due, correct_streak
 			FROM flashcards
 			WHERE review_due <= (?)
 			AND deck = (?)
 			""", (time,deck))
 		for card in cursor:
-			front, back, deck, review_due = card
-			pending_cards.append(Flashcard(front, back, deck, review_due))
+			front, back, deck, review_due_ordinal, correct_streak = card
+			review_due = dt.date.fromordinal(review_due_ordinal)
+			pending_cards.append(Flashcard(front, back, deck, review_due, correct_streak))
 		conn.close()
 		return pending_cards
 
